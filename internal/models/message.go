@@ -5,10 +5,10 @@ import "time"
 type MessageStatus string
 
 const(
-	StatusQueue      MessageStatus = "QUEUED"
+	StatusQueued      MessageStatus = "QUEUED"
 	StatusProcessing MessageStatus = "PROCESSING"
 	StatusAcked      MessageStatus = "ACKED"
-	StautsNacked     MessageStatus = "NACKED"
+	StatusNacked     MessageStatus = "NACKED"
 )
 
 type Message struct{

@@ -1,6 +1,6 @@
 package repository
 
-import "APIbench/internal/models"
+import "github.com/shreyasrajiv327/APIBench/internal/models"
 
 type MessageRepository interface {
 	Save(message *models.Message) error
