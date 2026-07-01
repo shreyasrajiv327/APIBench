@@ -42,3 +42,45 @@ func (h *Handler) Publish(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, msg)
 }
+
+func (h *Handler) Poll(c *gin.Context) {
+	msg, err := h.queue.Poll()
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, msg)
+}
+
+func (h *Handler) Ack(c *gin.Context) {
+	id := c.Param("id")
+
+	if err := h.queue.Ack(id); err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "acknowledged",
+	})
+}
+
+func (h *Handler) Nack(c *gin.Context) {
+	id := c.Param("id")
+
+	if err := h.queue.Nack(id); err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "nacked",
+	})
+}

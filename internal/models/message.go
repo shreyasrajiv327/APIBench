@@ -15,5 +15,5 @@ type Message struct{
 	ID       string
 	Payload  []byte
 	Status   MessageStatus
-	Created  time.Time
+	CreatedAt  time.Time
 }
