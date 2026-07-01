@@ -40,7 +40,7 @@ func (h *Handler) Publish(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, msg)
+	c.JSON(http.StatusCreated, ToMessageResponse(msg))
 }
 
 func (h *Handler) Poll(c *gin.Context) {
@@ -52,7 +52,7 @@ func (h *Handler) Poll(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, msg)
+	c.JSON(http.StatusOK, ToMessageResponse(msg))
 }
 
 func (h *Handler) Ack(c *gin.Context) {
