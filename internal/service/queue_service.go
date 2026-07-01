@@ -4,6 +4,7 @@ import (
 	"github.com/shreyasrajiv327/APIBench/internal/models"
 	"github.com/shreyasrajiv327/APIBench/internal/repository"
 	"fmt"
+	"time"
 )
 
 type QueueService interface{
@@ -28,6 +29,8 @@ func (q *queueService) Publish(payload []byte) (*models.Message, error) {
 		ID:      generateID(),
 		Payload: payload,
 		Status:  models.StatusQueued,
+		CreatedAt: time.Now(),
+
 	}
 
 	err := q.repo.Save(msg)
