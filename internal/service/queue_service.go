@@ -7,12 +7,13 @@ import (
 	"time"
 )
 
-type QueueService interface{
+type QueueService interface {
 	Publish(payload []byte) (*models.Message, error)
 	Poll() (*models.Message, error)
+	GetMessage(messageID string) (*models.Message, error)
 	Ack(messageID string) error
 	Nack(messageID string) error
-} 
+}
 
 type queueService struct {
     repo repository.MessageRepository
@@ -78,4 +79,8 @@ func (q *queueService) Nack(messageID string) error {
 
 	msg.Status = models.StatusNacked
 	return q.repo.Update(msg)
+}
+
+func (q *queueService) GetMessage(messageID string) (*models.Message, error) {
+	return q.repo.GetByID(messageID)
 }
