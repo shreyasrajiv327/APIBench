@@ -78,24 +78,46 @@ func NewHandler(resolver *Resolver) http.Handler {
 
 	// ---------------- Query ----------------
 
-	query := gql.NewObject(gql.ObjectConfig{
-		Name: "Query",
-		Fields: gql.Fields{
+// ---------------- Query ----------------
 
-			"nextMessage": &gql.Field{
-				Type: MessageType,
-				Resolve: func(p gql.ResolveParams) (interface{}, error) {
+query := gql.NewObject(gql.ObjectConfig{
+	Name: "Query",
+	Fields: gql.Fields{
 
-					msg, err := resolver.Queue.Poll()
-					if err != nil {
-						return nil, err
-					}
+		"nextMessage": &gql.Field{
+			Type: MessageType,
+			Resolve: func(p gql.ResolveParams) (interface{}, error) {
 
-					return ToMessageResponse(msg), nil
-				},
+				msg, err := resolver.Queue.Poll()
+				if err != nil {
+					return nil, err
+				}
+
+				return ToMessageResponse(msg), nil
 			},
 		},
-	})
+
+		"message": &gql.Field{
+			Type: MessageType,
+			Args: gql.FieldConfigArgument{
+				"id": &gql.ArgumentConfig{
+					Type: gql.NewNonNull(gql.String),
+				},
+			},
+			Resolve: func(p gql.ResolveParams) (interface{}, error) {
+
+				id := p.Args["id"].(string)
+
+				msg, err := resolver.Queue.GetMessage(id)
+				if err != nil {
+					return nil, err
+				}
+
+				return ToMessageResponse(msg), nil
+			},
+		},
+	},
+})
 
 	schema, err := gql.NewSchema(gql.SchemaConfig{
 		Query:    query,

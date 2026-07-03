@@ -84,3 +84,17 @@ func (h *Handler) Nack(c *gin.Context) {
 		"message": "nacked",
 	})
 }
+
+func (h *Handler) GetMessage(c *gin.Context) {
+	id := c.Param("id")
+
+	msg, err := h.queue.GetMessage(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, ToMessageResponse(msg))
+}
